@@ -1,4 +1,5 @@
 from flask import Flask, render_template, Blueprint, url_for, redirect, session, request
+from flask_security import login_required
 
 general = Blueprint('general', __name__)
 
@@ -9,5 +10,6 @@ def index():
 
 
 @general.route('/speech')
+@login_required
 def speech():
     return render_template('speech.html')
