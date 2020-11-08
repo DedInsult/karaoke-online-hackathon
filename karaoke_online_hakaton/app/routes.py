@@ -6,3 +6,8 @@ general = Blueprint('general', __name__)
 @general.route('/')
 def index():
     return "what's up!"
+
+
+@general.route('/speech')
+def speech():
+    return render_template('speech.html')
