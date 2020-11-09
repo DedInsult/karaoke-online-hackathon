@@ -12,7 +12,7 @@ user_datastore = MongoEngineUserDatastore(db, User, Role)
 security = Security()
 
 
-def create_app(debug=False):
+def create_app(debug=True):
     app = Flask(__name__, instance_relative_config=False)
     app.debug = debug
 

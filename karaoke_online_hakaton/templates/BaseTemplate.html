@@ -7,7 +7,7 @@
     <title>Karaoke Online · ITGEN</title>
 
 
-<link rel="stylesheet" href="bootstrap.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
     <!-- Bootstrap core CSS -->
 
 
@@ -78,6 +78,13 @@
   </div>
 </nav>
 
+     {% block content %}
+
+
+
+
+
+     {% endblock %}
 
 
 
