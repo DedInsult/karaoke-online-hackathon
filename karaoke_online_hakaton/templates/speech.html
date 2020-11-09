@@ -11,5 +11,11 @@
 <button id="start">Start</button>
 <button id="stop">Stop</button>
 <p id="text"></p>
+
+{% for song in songs %}
+<h1>{{ song.name }}</h1>
+{% endfor %}
+
+<audio controls src="{{ url_for('static', filename='songs/1.mp3') }}"></audio>
 </body>
 </html>
