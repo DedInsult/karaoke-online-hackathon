@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+{% extends 'BaseTemplate.html' %}
 
-    <script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+{% block content %}
 
-</head>
-<body>
+<script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+
 <button id="start">Start</button>
 <button id="stop">Stop</button>
 <p id="text"></p>
 {{ song.name }}
 <pre>{{ song.lyrics }}</pre>
 <audio controls src="{{ url_for('static', filename='songs/'+song.path) }}"></audio>
-</body>
-</html>
+
+{% endblock %}
