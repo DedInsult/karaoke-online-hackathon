@@ -1,10 +1,12 @@
 from datetime import datetime
-from flask_admin.contrib.mongoengine import ModelView
-from flask_admin import AdminIndexView
-from flask_security import MongoEngineUserDatastore, Security, UserMixin, RoleMixin, login_required, current_user
 from flask import redirect, url_for, request
-from karaoke_online_hakaton import db
+from flask_admin import AdminIndexView, form
+from flask_admin.contrib.mongoengine import ModelView
+from flask_security import UserMixin, RoleMixin, current_user
 from mongoengine import connect
+
+from helper_function import generate_song_name
+from karaoke_online_hakaton import db
 
 
 class Role(db.Document, RoleMixin):
@@ -17,7 +19,6 @@ class Role(db.Document, RoleMixin):
 
 class Song(db.Document):
     name = db.StringField(max_length=255, required=True)
-    duration = db.IntField(required=True)
     lyrics = db.StringField(required=True)
     difficulty = db.IntField(required=True)
     path = db.StringField()
@@ -43,6 +44,7 @@ class User(db.Document, UserMixin):
 
     sung_songs = db.EmbeddedDocumentListField(SungSong)
 
+    # Basic username assignment
     def save(self, *args, **kwargs):
         if not self.username:
             self.username = self.email.split("@")[0]
@@ -50,6 +52,7 @@ class User(db.Document, UserMixin):
 
 
 
+# Customizing Admin Views
 class AdminView(ModelView):
     def is_accessible(self):
         return current_user.has_role('admin')
@@ -66,13 +69,32 @@ class HomeAdminView(AdminIndexView):
         return redirect(url_for('general.index', next=request.url))
 
 
+class SongCustomAdminView(ModelView):
+    form_columns = ['name', 'author', 'difficulty', 'lyrics', 'language', 'song_file']
+
+    def is_accessible(self):
+        return current_user.has_role('admin')
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('general.index', next=request.url))
+
+
+    def on_model_change(self, form, model, is_created):
+        model.path = form.song_file.data.filename
+        return super(SongCustomAdminView, self).on_model_change(form, model, is_created)
+
+    form_extra_fields = {
+        'song_file': form.FileUploadField('Song file',
+                                          base_path='karaoke_online_hakaton/static/songs',
+                                          namegen=generate_song_name)
+    }
+
 
 if __name__ == '__main__':
     connect('test')
 
     u = User.objects[0]
     print(u.sung_songs[0].get_author())
-
 
     # FOR DEBUG PURPOSES, DELETE LATER
     # ss = SungSong()
