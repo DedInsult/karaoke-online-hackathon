@@ -1,6 +1,6 @@
 import mongoengine
 from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort
-from flask_security import login_required
+from flask_security import login_required, roles_required
 from DataBase import Song
 
 general = Blueprint('general', __name__)
@@ -21,3 +21,4 @@ def speech(song_id):
 
     except mongoengine.errors.ValidationError:
         abort(404)
+
