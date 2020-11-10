@@ -51,7 +51,6 @@ class User(db.Document, UserMixin):
         return super(User, self).save(*args, **kwargs)
 
 
-
 # Customizing Admin Views
 class AdminView(ModelView):
     def is_accessible(self):
@@ -77,7 +76,6 @@ class SongCustomAdminView(ModelView):
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('general.index', next=request.url))
-
 
     def on_model_change(self, form, model, is_created):
         model.path = form.song_file.data.filename
