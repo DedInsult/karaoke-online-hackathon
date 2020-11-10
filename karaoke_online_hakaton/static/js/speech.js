@@ -25,5 +25,7 @@ window.addEventListener('load', function () {
         text.innerHTML = userLyrics;
     });
 
+
+
 });
 

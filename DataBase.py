@@ -1,9 +1,7 @@
-from flask_security import MongoEngineUserDatastore, Security, UserMixin, RoleMixin, login_required, current_user
-from karaoke_online_hakaton import db
-from flask_admin.contrib.mongoengine import ModelView
-from flask import redirect, url_for, request
-from flask_admin import AdminIndexView
+from datetime import datetime
 
+from flask_security import MongoEngineUserDatastore, Security, UserMixin, RoleMixin, login_required
+from karaoke_online_hakaton import db
 
 class Role(db.Document, RoleMixin):
     name = db.StringField(max_length=80, unique=True)
@@ -13,29 +11,28 @@ class Role(db.Document, RoleMixin):
         return self.name
 
 
+class Song(db.Document):
+    name = db.StringField(max_length=255, required=True)
+    duration = db.IntField(required=True)
+    lyrics = db.StringField(required=True)
+    difficulty = db.IntField(required=True)
+    path = db.StringField()
+    author = db.StringField()
+    language = db.StringField(choices=(('eng', 'en-US'), ('ru', 'ru-RU')), required=True)
+
+
+class SungSong(db.EmbeddedDocument):
+    song = db.ReferenceField(Song)
+    score = db.IntField(required=True)
+    date = db.DateTimeField(default=datetime.utcnow())
+
+    def get_author(self):
+        return self._instance
+
+
 class User(db.Document, UserMixin):
-    username = db.StringField(max_length=40)
+    #username = db.StringField(max_length=40)
     email = db.StringField(max_length=255)
     password = db.StringField(max_length=255)
     active = db.BooleanField(default=True)
     roles = db.ListField(db.ReferenceField(Role), default=[])
-
-# ADMIN #
-
-
-class AdminView(ModelView):
-    def is_accessible(self):
-        return current_user.has_role('admin')
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('general.index', next=request.url))
-
-
-class HomeAdminView(AdminIndexView):
-    def is_accessible(self):
-        return current_user.has_role('admin')
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('general.index', next=request.url))
-
-

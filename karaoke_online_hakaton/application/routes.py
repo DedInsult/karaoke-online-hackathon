@@ -1,6 +1,6 @@
 from flask import Flask, render_template, Blueprint, url_for, redirect, session, request
 from flask_security import login_required
-from karaoke_online_hakaton import user_datastore
+from DataBase import Song
 
 general = Blueprint('general', __name__)
 
@@ -12,11 +12,11 @@ def index():
 
 @general.route('/speech')
 @login_required
-def speech():
-    return render_template('speech.html')
+def speech(song_id):
+    try:
+        song = Song.objects(id=song_id)[0]
+        print(song.name)
+        return render_template('speech.html', song=song)
 
-@general.before_app_first_request()
-def restrict_admin_url():
-    endpoint = "admin.index"
-    url = url_for(endpoint)
-    admin_index = general.view_functions.pop(endpoint)
+    except mongoengine.errors.ValidationError:
+        abort(404)
