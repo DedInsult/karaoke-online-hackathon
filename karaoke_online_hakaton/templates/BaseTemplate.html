@@ -50,28 +50,34 @@
 
   <div class="collapse navbar-collapse d-flex justify-content-around"  id="navbarSupportedContent">
     <ul class="navbar-nav ">
-        <button type="button" class="btn btn-outline-info m-1">Sign Up</button>
+        {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('security.register') }}"><button type="button" class="btn btn-outline-info m-1">Sign Up</button></a>
+        {% endif %}
       <li class="nav-item active">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Link</a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
+        {% if current_user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ current_user.email }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{{ url_for('security.logout')}}">Log Out</a>
+                </div>
+        {% endif %}
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
       </li>
-        <button type="button" class="btn btn-outline-danger m-1 ">Sign In</button>
+        {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('security.login') }}"><button type="button" class="btn btn-outline-danger m-1 ">Sign In</button></a>
+        {% endif %}
     </ul>
   </div>
 </nav>
