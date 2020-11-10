@@ -43,6 +43,11 @@ class User(db.Document, UserMixin):
 
     sung_songs = db.EmbeddedDocumentListField(SungSong)
 
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = self.email.split("@")[0]
+        return super(User, self).save(*args, **kwargs)
+
 
 
 class AdminView(ModelView):
