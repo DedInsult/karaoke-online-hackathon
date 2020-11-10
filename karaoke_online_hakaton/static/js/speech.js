@@ -1,3 +1,5 @@
+
+
 window.addEventListener('load', function () {
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
@@ -5,11 +7,9 @@ window.addEventListener('load', function () {
     recognition.lang = 'ru-RU';
     recognition.continuous = true;
 
-    let start = document.querySelector('#start');
-    let stop = document.querySelector('#stop');
-
     let song = document.querySelector('#song');
     let startStop = document.querySelector('#startStop');
+    let scoreTracker = document.querySelector('#scoreTracker');
 
     startStop.addEventListener('click', () => {
         if (state == false) {
@@ -25,24 +25,27 @@ window.addEventListener('load', function () {
         }
     });
 
-    start.addEventListener('click', () => {
-        recognition.start();
+    let original_text = document.querySelector('#original-lyrics').innerHTML;
 
-    });
-
-    stop.addEventListener('click', () => {
-        recognition.stop();
-    });
+    original_text = original_text.replace(/\n|\r|,|\./g, ' ')
+        .toLowerCase()
+        .replace(/ё/g, 'е');
+    let original_words = original_text.split(' ');
 
     let userLyrics = '';
+
+
     let text = document.querySelector('#text');
     recognition.addEventListener('result', e => {
-        console.log(e)
-        userLyrics += e.results[e.resultIndex][0].transcript + '<br>';
-        text.innerHTML = userLyrics;
+        userLyrics += e.results[e.resultIndex][0].transcript
+            .replace(/ё/g, 'е')
+            .toLowerCase();
+
+        words_count = (userLyrics.match(/ /g) || []).length + 1;
+
+        original_text_chunk = original_words.slice(0, words_count).join(' ');
+        scoreTracker.innerHTML = 'Your current score: ' + Math.round(similarity(userLyrics, original_text_chunk) * 100) +'%';
+
     });
-
-
-
 });
 

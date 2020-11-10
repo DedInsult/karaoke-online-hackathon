@@ -2,21 +2,21 @@
 
 {% block content %}
 
+<script src="{{ url_for('static', filename='js/levensteinAlgo.js') }}"></script>
 <script src="{{ url_for('static', filename='js/speech.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/gh/foobar404/wave.js/dist/bundle.iife.js"></script>
 
-<button class='btn' id="start">Start</button>
-<button class='btn' id="stop">Stop</button>
+<h1 id="scoreTracker"></h1>
 
 <button id='startStop' type="button" class="btn btn-success">Play</button>
 
-
+<canvas id="visualizer" height="500" width="500"></canvas>
 <p id="text"></p>
 {{ song.name }}
-<pre>{{ song.lyrics }}</pre>
+<pre id="original-lyrics">{{ song.lyrics }}</pre>
 
-<audio id="song" controls src="{{ url_for('static', filename='songs/'+song.path) }}"></audio>
-<canvas id="visualizer" height="500" width="500"></canvas>
+<audio id="song" src="{{ url_for('static', filename='songs/'+song.path) }}"></audio>
+
 
 
 <script>
