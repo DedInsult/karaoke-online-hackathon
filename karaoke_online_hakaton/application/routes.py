@@ -1,4 +1,5 @@
-from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory
+import mongoengine
+from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort
 from flask_security import login_required
 from DataBase import Song
 
@@ -10,9 +11,13 @@ def index():
     return render_template("mainpage.html")
 
 
-@general.route('/speech')
+@general.route('/<song_id>')
 @login_required
-def speech():
-    songs = Song.objects
+def speech(song_id):
+    try:
+        song = Song.objects(id=song_id)[0]
+        print(song.name)
+        return render_template('speech.html', song=song)
 
-    return render_template('speech.html', songs=songs)
+    except mongoengine.errors.ValidationError:
+        abort(404)
