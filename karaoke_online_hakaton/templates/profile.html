@@ -1,11 +1,16 @@
 {% extends 'BaseTemplate.html' %}
 
 {% block content %}
-<h1>{{ current_user.username }}</h1>
-<form method="POST" action="/profile">
-    {{ form.csrf_token }}
-    {{ form.username.label }} {{ form.username() }}
-    <input type="submit" value="Go">
-</form>
+<div class="container">
+    <div class="card border-success mb-3">
+        <div class="row justify-content-md-center">
+            <h3>{{ current_user.username }}</h3>
+        </div>
+        <a href="{{ url_for('general.editprofile') }}">
+            <button type="button" class="btn btn-outline-success">Edit Profile</button>
+        </a>
+    </div>
+</div>
+
 
 {% endblock %}

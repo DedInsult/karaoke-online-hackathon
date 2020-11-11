@@ -45,7 +45,7 @@ def profile():
     return render_template('profile.html', form=form)
 
 
-@general.route("/lobby/SungSongs")
+@general.route("/profile/SungSongs")
 def SungSongs():
     q = request.args.get("q")
 
@@ -61,8 +61,9 @@ def SungSongs():
     else:
         songs = User.objects.sung_sungs
 
-    pages = songs.paginate(page=page, per_page=1)
-    pass
+    pages = songs.paginate(page=page, per_page=2)
+    return render_template('sungsongs.html', pages=pages)
+
 
 @general.route('/<song_id>')
 @login_required
@@ -77,3 +78,6 @@ def speech(song_id):
     except mongoengine.errors.ValidationError:
         abort(404)
 
+@general.route('/editprofile')
+def editprofile():
+    return render_template("editprofile.html")
