@@ -37,8 +37,23 @@ def lobby():
 def speech(song_id):
     try:
         song = Song.objects(id=song_id)[0]
-        print(song.name)
-        return render_template('speech.html', song=song)
+
+        stroki = song.lyrics.split("\n")
+
+        text = []
+        counter = 0
+        for stroka in stroki:
+            stroka_texta = []
+
+            slova = stroka.split(' ')
+
+            for slovo in slova:
+                counter += 1
+                stroka_texta.append(f'<span id={counter}>{slovo}</span>')
+
+            text.append(' '.join(stroka_texta))
+
+        return render_template('speech.html', song=song, ly='\n'.join(text))
 
     except mongoengine.errors.ValidationError:
         abort(404)
