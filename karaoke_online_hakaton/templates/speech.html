@@ -2,9 +2,7 @@
 
 {% block content %}
 
-<script src="{{ url_for('static', filename='js/levensteinAlgo.js') }}"></script>
-<script src="{{ url_for('static', filename='js/speech.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/gh/foobar404/wave.js/dist/bundle.iife.js"></script>
+
 
 <h1 id="scoreTracker"></h1>
 
@@ -13,17 +11,24 @@
 <canvas id="visualizer" height="500" width="500"></canvas>
 <p id="text"></p>
 {{ song.name }}
-<pre id="original-lyrics">{{ song.lyrics }}</pre>
+<pre style='line-height: .7; overflow: hidden;' id="original-lyrics">{{ ly|safe }}</pre>
 
 <audio id="song" src="{{ url_for('static', filename='songs/'+song.path) }}"></audio>
 
 
+<script src="{{ url_for('static', filename='js/levensteinAlgo.js') }}"></script>
+<script src="{{ url_for('static', filename='js/speech.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/gh/foobar404/wave.js/dist/bundle.iife.js"></script>
 
 <script>
+    var original_text = {{ song.lyrics|tojson }}
+
     <!-- Visualizer -->
     let wave = new Wave();
     options = {type:"star"};
     wave.fromElement("song","visualizer", options);
 </script>
+
+
 
 {% endblock %}
