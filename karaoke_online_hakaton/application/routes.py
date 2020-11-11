@@ -38,13 +38,7 @@ def lobby():
 
 @general.route('/profile', methods=["GET", "POST"])
 def profile():
-    form = NewUserNameForm()
-    if form.validate_on_submit():
-        new_name = form.username.data
-        user = User.objects(id__contains=current_user.id)
-        user.update(set__username=str(new_name))
-
-    return render_template('profile.html', form=form)
+    return render_template('profile.html')
 
 
 @general.route("/profile/SungSongs")
@@ -100,6 +94,15 @@ def submit_song():
 
     return jsonify('Your result has been saved!')
 
-@general.route('/editprofile')
+
+@general.route('/profile/edit', methods=('POST', 'GET'))
 def editprofile():
-    return render_template("editprofile.html")
+
+    form = NewUserNameForm()
+    if form.validate_on_submit():
+        new_name = form.username.data
+        user = User.objects(id__contains=current_user.id)
+        user.update(set__username=str(new_name))
+        return redirect(url_for("general.profile"))
+
+    return render_template("editprofile.html", form=form)
