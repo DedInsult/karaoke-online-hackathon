@@ -2,6 +2,7 @@ import mongoengine
 from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort
 from flask_security import login_required, roles_required
 from DataBase import *
+from helper_function import spanify_text
 
 general = Blueprint('general', __name__)
 
@@ -9,6 +10,7 @@ general = Blueprint('general', __name__)
 @general.route('/')
 def index():
     return render_template("mainpage.html")
+
 
 @general.route('/lobby')
 @login_required
@@ -20,7 +22,7 @@ def lobby():
     if page and page.isdigit():
         page = int(page)
     else:
-        page=1
+        page = 1
 
     if q:
         songs = Song.objects(name__contains=q)
@@ -38,23 +40,9 @@ def speech(song_id):
     try:
         song = Song.objects(id=song_id)[0]
 
-        stroki = song.lyrics.split("\n")
+        text = spanify_text(song)
 
-        text = []
-        counter = 0
-        for stroka in stroki:
-            stroka_texta = []
-
-            slova = stroka.split(' ')
-
-            for slovo in slova:
-                counter += 1
-                stroka_texta.append(f'<span id={counter}>{slovo}</span>')
-
-            text.append(' '.join(stroka_texta))
-
-        return render_template('speech.html', song=song, ly='\n'.join(text))
+        return render_template('speech.html', song=song, ly=text)
 
     except mongoengine.errors.ValidationError:
         abort(404)
-
