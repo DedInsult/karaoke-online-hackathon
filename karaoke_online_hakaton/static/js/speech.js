@@ -1,11 +1,14 @@
-
-
 window.addEventListener('load', function () {
     window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     let state = false;
     // change the lang depending on the song
-    recognition.lang = 'ru-RU';
+    if (recognition_language === 'ru') {
+        recognition.lang = 'ru-RU'
+    } else if (recognition_language === 'eng') {
+        recognition.lang = 'en-US'
+    }
+
     recognition.continuous = true;
 
     let song = document.querySelector('#song');
@@ -26,12 +29,15 @@ window.addEventListener('load', function () {
         }
     });
 
-    original_text = original_text.replace(/\n|\r|,|\./g, ' ')
+    original_text = original_text.replace(/\n|\r|\,|\./g, ' ')
         .toLowerCase()
-        .replace(/ё/g, 'е');
-    let original_words = original_text.split(' ');
+        .replace(/ё/g, 'е')
+        .replace('"', '');
 
-    let userLyrics = '';
+    var original_words = [].concat.apply([], Array.from(original_text.split('  ')).map(x => x.split(' ')).filter(x => x != ""))
+
+
+    var userLyrics = '';
 
     let text = document.querySelector('#text');
     recognition.addEventListener('result', e => {
@@ -58,7 +64,20 @@ window.addEventListener('load', function () {
         }
 
         original_text_chunk = original_words.slice(0, words_count);
+
         scoreTracker.innerHTML = `Your current score: ${Math.round(similarity(userLyricsList, original_text_chunk))}%`
+    });
+
+    // Send userLyrics to backend
+    song.addEventListener('ended', () => {
+        console.log('ENDED')
+            axios.post('/submit_song', {
+                userLyrics,
+                song_id
+            })
+            .then(function (response) {
+                alert(response)
+            })
     });
 });
 

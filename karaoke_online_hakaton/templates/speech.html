@@ -13,15 +13,18 @@
 {{ song.name }}
 <pre style='line-height: .7; overflow: hidden;' id="original-lyrics">{{ ly|safe }}</pre>
 
-<audio id="song" src="{{ url_for('static', filename='songs/'+song.path) }}"></audio>
+<audio id="song" controls src="{{ url_for('static', filename='songs/'+song.path) }}"></audio>
 
 
 <script src="{{ url_for('static', filename='js/levensteinAlgo.js') }}"></script>
 <script src="{{ url_for('static', filename='js/speech.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/gh/foobar404/wave.js/dist/bundle.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
-    var original_text = {{ song.lyrics|tojson }}
+    var original_text = '{{ song.lyrics|tojson }}';
+    var recognition_language = '{{ song.language|tojson }}';
+    var song_id = '{{ song.id|string }}';
 
     <!-- Visualizer -->
     let wave = new Wave();
