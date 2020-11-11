@@ -1,0 +1,11 @@
+{% extends 'BaseTemplate.html' %}
+
+{% block content %}
+<h1>{{ current_user.username }}</h1>
+<form method="POST" action="/profile">
+    {{ form.csrf_token }}
+    {{ form.username.label }} {{ form.username() }}
+    <input type="submit" value="Go">
+</form>
+
+{% endblock %}
