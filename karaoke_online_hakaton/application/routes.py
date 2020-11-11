@@ -2,6 +2,7 @@ import mongoengine
 from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort
 from flask_security import login_required, roles_required
 from DataBase import *
+from forms import *
 
 general = Blueprint('general', __name__)
 
@@ -30,6 +31,16 @@ def lobby():
     pages = songs.paginate(page=page, per_page=1)
 
     return render_template("lobby.html", songs=songs, pages=pages)
+
+@general.route('/profile', methods=["GET","POST"])
+def profile():
+    form = NewUserNameForm()
+    if form.validate_on_submit():
+        new_name = form.username.data
+        user = User.objects(id__contains = current_user.id)
+        user.update(set__username=str(new_name))
+
+    return render_template('profile.html', form=form)
 
 
 @general.route('/<song_id>')
