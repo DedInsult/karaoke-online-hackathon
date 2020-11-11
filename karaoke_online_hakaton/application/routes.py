@@ -1,9 +1,10 @@
 import mongoengine
-from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort
+from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort, jsonify
 from flask_security import login_required, roles_required
 from DataBase import *
 from forms import *
 from helper_function import spanify_text
+from fuzzywuzzy import fuzz
 
 general = Blueprint('general', __name__)
 
@@ -11,6 +12,7 @@ general = Blueprint('general', __name__)
 @general.route('/')
 def index():
     return render_template("mainpage.html")
+
 
 @general.route('/lobby')
 @login_required
@@ -34,12 +36,12 @@ def lobby():
     return render_template("lobby.html", songs=songs, pages=pages)
 
 
-@general.route('/profile', methods=["GET","POST"])
+@general.route('/profile', methods=["GET", "POST"])
 def profile():
     form = NewUserNameForm()
     if form.validate_on_submit():
         new_name = form.username.data
-        user = User.objects(id__contains = current_user.id)
+        user = User.objects(id__contains=current_user.id)
         user.update(set__username=str(new_name))
 
     return render_template('profile.html', form=form)
@@ -77,6 +79,26 @@ def speech(song_id):
 
     except mongoengine.errors.ValidationError:
         abort(404)
+
+
+@general.route('/submit_song', methods=('POST', 'GET'))
+def submit_song():
+    data = request.json
+
+    user = User.objects(id=current_user.id)[0]
+    song = Song.objects(id=data['song_id'])[0]
+
+    original_lyrics = song.lyrics
+    original_lyrics = original_lyrics.replace("ё", "е").replace(",", "").replace(".", "").replace("\n", " ")
+    original_lyrics = original_lyrics.lower()
+    percentage = fuzz.ratio(original_lyrics, data['userLyrics'])
+
+    sung = SungSong(song=song, score=percentage)
+
+    user.sung_songs.append(sung)
+    user.save()
+
+    return jsonify('Your result has been saved!')
 
 @general.route('/editprofile')
 def editprofile():
