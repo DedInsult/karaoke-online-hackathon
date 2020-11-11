@@ -47,6 +47,25 @@ def profile():
     return render_template('profile.html', form=form)
 
 
+@general.route("/lobby/SungSongs")
+def SungSongs():
+    q = request.args.get("q")
+
+    page = request.args.get('page')
+
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    if q:
+        songs = User.objects.sung_songs(name__contains=q)
+    else:
+        songs = User.objects.sung_sungs
+
+    pages = songs.paginate(page=page, per_page=1)
+    pass
+
 @general.route('/<song_id>')
 @login_required
 def speech(song_id):
