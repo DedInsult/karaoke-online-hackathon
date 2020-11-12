@@ -3,11 +3,13 @@ window.addEventListener('load', function () {
     const recognition = new SpeechRecognition();
     let state = false;
     // change the lang depending on the song
-    if (recognition_language === 'ru') {
+    if (recognition_language === '"ru"') {
         recognition.lang = 'ru-RU'
-    } else if (recognition_language === 'eng') {
+    } else if (recognition_language === '"eng"') {
         recognition.lang = 'en-US'
     }
+
+    console.log(recognition.lang)
 
     recognition.continuous = true;
 
@@ -64,15 +66,15 @@ window.addEventListener('load', function () {
         }
 
         original_text_chunk = original_words.slice(0, words_count);
-
-        scoreTracker.innerHTML = `Your current score: ${Math.round(similarity(userLyricsList, original_text_chunk))}%`
+        percentage = Math.round(similarity(userLyricsList, original_text_chunk))
+        scoreTracker.innerHTML = `Your current score: ${percentage}%`
     });
 
     // Send userLyrics to backend
     song.addEventListener('ended', () => {
         console.log('ENDED')
             axios.post('/submit_song', {
-                userLyrics,
+                percentage,
                 song_id
             })
             .then(function (response) {
