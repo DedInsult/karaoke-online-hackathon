@@ -53,9 +53,9 @@ def SungSongs():
         page = 1
 
     if q:
-        songs = User.objects.sung_songs(name__contains=q)
+        songs = current_user.sung_songs(name__contains=q)
     else:
-        songs = User.objects.sung_sungs
+        songs = current_user.sung_songs
 
     pages = songs.paginate(page=page, per_page=2)
     return render_template('sungsongs.html', pages=pages)

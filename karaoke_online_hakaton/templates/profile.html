@@ -3,14 +3,53 @@
 {% block content %}
 <div class="container">
     <div class="card border-success mb-3">
+        <div class="card-mb-3"
         <div class="row justify-content-md-center">
-            <h3>{{ current_user.username }}</h3>
+            <div class="card-header">
+                <div class="row justify-content-md-center">
+                    <h3>{{ current_user.username }}</h3>
+                </div>
+            </div>
         </div>
-        <a href="{{ url_for('general.editprofile') }}">
-            <button type="button" class="btn btn-outline-success">Edit Profile</button>
-        </a>
+        <div class="card-body">
+            <svg xmlns="http://www.w3.org/2000/svg" class="d-block user-select-none" width="100%" height="200"
+                 aria-label="Placeholder: Image cap" focusable="false" role="img"
+                 preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180"
+                 style="font-size:1.125rem;text-anchor:middle">
+                <rect width="100%" height="100%" fill="#868e96"></rect>
+                <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+            </svg>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="badge badge-dark" style="font-size: 25">Sung songs </span>
+                        <a href="{{ url_for('general.SungSongs') }}">
+                            <button type="button" class="btn btn-outline-success">Check</button>
+                        </a>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="badge badge-dark" style="font-size: 25">Achievments </span>
+                        <a href="{{ url_for('general.SungSongs') }}">
+                            <button type="button" class="btn btn-outline-success">Check</button>
+                        </a>
+                    </div></li>
+                <li class="list-group-item">Vestibulum at eros</li>
+            </ul>
+
+            <div href="{{ url_for('general.SungSongs') }}">
+                <button type="button" class="btn btn-outline-success">Check</button>
+            </div>
+
+
+            <a href="{{ url_for('general.editprofile') }}">
+                <button type="button" class="btn btn-outline-success">Edit Profile</button>
+            </a>
+        </div>
     </div>
 </div>
-
 
 {% endblock %}

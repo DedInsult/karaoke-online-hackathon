@@ -64,10 +64,10 @@
                 <a class="nav-link" href="{{ url_for('general.index') }}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="{{ url_for('general.lobby') }}">Lobby</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="#">Support <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="https://vk.com/maxiskilov" target="_blank" >Support <span class="sr-only">(current)</span></a>
             </li>
             {% if current_user.is_authenticated %}
             <li class="nav-item dropdown">
