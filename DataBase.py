@@ -41,7 +41,7 @@ class User(db.Document, UserMixin):
     password = db.StringField(max_length=255)
     active = db.BooleanField(default=True)
     roles = db.ListField(db.ReferenceField(Role), default=[])
-
+    score = db.IntField()
     sung_songs = db.EmbeddedDocumentListField(SungSong)
 
     # Basic username assignment

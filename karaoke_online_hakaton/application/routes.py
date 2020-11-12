@@ -87,12 +87,9 @@ def submit_song():
     user = User.objects(id=current_user.id)[0]
     song = Song.objects(id=data['song_id'])[0]
 
-    original_lyrics = song.lyrics
-    original_lyrics = original_lyrics.replace("ё", "е").replace(",", "").replace(".", "").replace("\n", " ")
-    original_lyrics = original_lyrics.lower()
-    percentage = fuzz.ratio(original_lyrics, data['userLyrics'])
+    sung = SungSong(song=song, score=data['percentage'])
 
-    sung = SungSong(song=song, score=percentage)
+    user.score += data['percentage'] * 1.5 ** song.difficulty
 
     user.sung_songs.append(sung)
     user.save()
