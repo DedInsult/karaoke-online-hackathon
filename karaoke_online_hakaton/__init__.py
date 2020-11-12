@@ -37,6 +37,7 @@ def create_app(debug=True):
     admin.init_app(app)
     admin.add_view(AdminView(User, endpoint="user"))
     admin.add_view(AdminView(Role, endpoint="role"))
+    admin.add_view((AdminView(Achievement, endpoint="Achievements")))
     admin.add_view(SongCustomAdminView(Song, endpoint="Song"))
 
     from .application import routes

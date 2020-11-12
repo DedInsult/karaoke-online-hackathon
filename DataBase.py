@@ -35,6 +35,19 @@ class SungSong(db.EmbeddedDocument):
         return self._instance
 
 
+class Achievement(db.Document):
+    name = db.StringField()
+    way_get = db.StringField()
+    rarity = db.IntField()
+    points = db.IntField()
+    amount_get = db.IntField()
+
+    def __str__(self):
+        return self.name
+
+
+
+
 class User(db.Document, UserMixin):
     username = db.StringField(max_length=40)
     email = db.StringField(max_length=255)
@@ -44,11 +57,14 @@ class User(db.Document, UserMixin):
 
     sung_songs = db.EmbeddedDocumentListField(SungSong)
 
+    achievements = db.ListField(db.ReferenceField(Achievement), default=[])
+
     # Basic username assignment
     def save(self, *args, **kwargs):
         if not self.username:
             self.username = self.email.split("@")[0]
         return super(User, self).save(*args, **kwargs)
+
 
 
 # Customizing Admin Views

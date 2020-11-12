@@ -1,5 +1,6 @@
 import mongoengine
 from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort, jsonify
+from flask_mongoengine import ListFieldPagination
 from flask_security import login_required, roles_required
 from DataBase import *
 from forms import *
@@ -29,7 +30,7 @@ def lobby():
     if q:
         songs = Song.objects(name__contains=q)
     else:
-        songs = Song.objects
+        songs = User.sung_songs()
 
     pages = songs.paginate(page=page, per_page=1)
 
@@ -43,22 +44,27 @@ def profile():
 
 @general.route("/profile/SungSongs")
 def SungSongs():
-    q = request.args.get("q")
+    #q = request.args.get("q")
 
-    page = request.args.get('page')
+    #page = request.args.get('page')
 
-    if page and page.isdigit():
-        page = int(page)
-    else:
-        page = 1
+    #if page and page.isdigit():
+        #page = int(page)
+    #else:
+        #page = 1
 
-    if q:
-        songs = current_user.sung_songs(name__contains=q)
-    else:
-        songs = current_user.sung_songs
+    #if q:
+        #songs = User.objects(sung_sungs_contains=q)
+   # else:
+        #user = current_user
 
-    pages = songs.paginate(page=page, per_page=2)
-    return render_template('sungsongs.html', pages=pages)
+
+    #print(user)
+
+    #pages = ListFieldPagination(queryset=user, field_name=User.sung_songs, page=page, per_page=1, doc_id=idk)
+
+    songs = current_user.sung_songs
+    return render_template('sungsongs.html', songs=songs)
 
 
 @general.route('/<song_id>')
