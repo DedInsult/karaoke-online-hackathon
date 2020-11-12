@@ -2,9 +2,11 @@ from flask import Flask
 from flask_mongoengine import MongoEngine
 from flask_security import MongoEngineUserDatastore, Security
 from flask_admin import Admin
+from flask_avatars import Avatars
 
 import config
 
+avatars = Avatars()
 db = MongoEngine()
 admin = Admin()
 
@@ -19,6 +21,12 @@ def create_app(debug=True):
     app = Flask(__name__, instance_relative_config=False)
     app.debug = debug
     app.config.from_object(config.Config)
+
+
+    # flask avatars
+    app.config['AVATARS_SAVE_PATH'] = 'karaoke_online_hakaton/static/avatars'
+
+    avatars.init_app(app)
 
     # flask security
     app.config['SECURITY_REGISTERABLE'] = True

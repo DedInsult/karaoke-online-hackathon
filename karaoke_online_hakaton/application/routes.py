@@ -1,11 +1,14 @@
 import mongoengine
-from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort, jsonify
+from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort, \
+    jsonify
 from flask_mongoengine import ListFieldPagination
 from flask_security import login_required, roles_required
 from DataBase import *
 from forms import *
 from helper_function import spanify_text
 from fuzzywuzzy import fuzz
+
+from karaoke_online_hakaton import avatars
 
 general = Blueprint('general', __name__)
 
@@ -44,24 +47,23 @@ def profile():
 
 @general.route("/profile/SungSongs")
 def SungSongs():
-    #q = request.args.get("q")
+    # q = request.args.get("q")
 
-    #page = request.args.get('page')
+    # page = request.args.get('page')
 
-    #if page and page.isdigit():
-        #page = int(page)
-    #else:
-        #page = 1
+    # if page and page.isdigit():
+    # page = int(page)
+    # else:
+    # page = 1
 
-    #if q:
-        #songs = User.objects(sung_sungs_contains=q)
-   # else:
-        #user = current_user
+    # if q:
+    # songs = User.objects(sung_sungs_contains=q)
+    # else:
+    # user = current_user
 
+    # print(user)
 
-    #print(user)
-
-    #pages = ListFieldPagination(queryset=user, field_name=User.sung_songs, page=page, per_page=1, doc_id=idk)
+    # pages = ListFieldPagination(queryset=user, field_name=User.sung_songs, page=page, per_page=1, doc_id=idk)
 
     songs = current_user.sung_songs
     return render_template('sungsongs.html', songs=songs)
@@ -89,8 +91,9 @@ def submit_song():
     song = Song.objects(id=data['song_id'])[0]
 
     sung = SungSong(song=song, score=data['percentage'])
-
-    user.score += data['percentage'] * 1.5 ** song.difficulty
+    print(user.points)
+    print(type(user.points))
+    user.points += data['percentage'] * 1.5 ** song.difficulty
 
     user.sung_songs.append(sung)
     user.save()
@@ -98,9 +101,14 @@ def submit_song():
     return jsonify('Your result has been saved!')
 
 
+@general.route('/avatars/<path:filename>')
+def get_avatar(filename):
+    print('lmao')
+    print(send_from_directory('karaoke_online_hakaton/static/avatars', filename))
+    return send_from_directory('karaoke_online_hakaton/static/avatars', filename)
+
 @general.route('/profile/edit', methods=('POST', 'GET'))
 def editprofile():
-
     form = NewUserNameForm()
     if form.validate_on_submit():
         new_name = form.username.data
@@ -108,4 +116,13 @@ def editprofile():
         user.update(set__username=str(new_name))
         return redirect(url_for("general.profile"))
 
-    return render_template("editprofile.html", form=form)
+    avatar_form = UploadAvatarForm()
+    if request.method == 'POST':
+        f = request.files.get('file')
+        raw_filename = avatars.save_avatar(f)
+        user = User.objects(id=current_user.id)[0]
+        user.avatar_filename = raw_filename
+        user.save()
+        return redirect(url_for("general.profile"))
+
+    return render_template("editprofile.html", form=form, avatar_form=avatar_form)

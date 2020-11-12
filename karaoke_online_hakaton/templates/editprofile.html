@@ -11,6 +11,13 @@
                         {{ form.username.label }} {{ form.username(class="form-control", placeholder="Username") }}
                         <input type="submit" value="Save changes" class="btn-success btn-lg btn-block">
                     </form>
+
+                    <form method="post" enctype="multipart/form-data" action="/profile/edit">
+                        {{ avatar_form.csrf_token }}
+                        {{ avatar_form.file }}
+                        {{ avatar_form.submit }}
+                    </form>
+                    </form>
                 </ul>
             </div>
         </div>
