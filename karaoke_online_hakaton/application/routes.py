@@ -38,16 +38,10 @@ def lobby():
 
 @general.route('/profile', methods=["GET", "POST"])
 def profile():
-    form = NewUserNameForm()
-    if form.validate_on_submit():
-        new_name = form.username.data
-        user = User.objects(id__contains=current_user.id)
-        user.update(set__username=str(new_name))
-
-    return render_template('profile.html', form=form)
+    return render_template('profile.html')
 
 
-@general.route("/lobby/SungSongs")
+@general.route("/profile/SungSongs")
 def SungSongs():
     q = request.args.get("q")
 
@@ -59,12 +53,13 @@ def SungSongs():
         page = 1
 
     if q:
-        songs = User.objects.sung_songs(name__contains=q)
+        songs = current_user.sung_songs(name__contains=q)
     else:
-        songs = User.objects.sung_sungs
+        songs = current_user.sung_songs
 
-    pages = songs.paginate(page=page, per_page=1)
-    pass
+    pages = songs.paginate(page=page, per_page=2)
+    return render_template('sungsongs.html', pages=pages)
+
 
 @general.route('/<song_id>')
 @login_required
@@ -95,3 +90,16 @@ def submit_song():
     user.save()
 
     return jsonify('Your result has been saved!')
+
+
+@general.route('/profile/edit', methods=('POST', 'GET'))
+def editprofile():
+
+    form = NewUserNameForm()
+    if form.validate_on_submit():
+        new_name = form.username.data
+        user = User.objects(id__contains=current_user.id)
+        user.update(set__username=str(new_name))
+        return redirect(url_for("general.profile"))
+
+    return render_template("editprofile.html", form=form)

@@ -1,0 +1,21 @@
+{% extends 'BaseTemplate.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-3">
+            <div class="card border-info mb-3">
+                <ul class="list-group list-group-flush">
+                    <form method="POST" action="/profile/edit">
+                        {{ form.csrf_token }}
+                        {{ form.username.label }} {{ form.username(class="form-control", placeholder="Username") }}
+                        <input type="submit" value="Save changes" class="btn-success btn-lg btn-block">
+                    </form>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
