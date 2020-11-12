@@ -30,7 +30,7 @@ def lobby():
     if q:
         songs = Song.objects(name__contains=q)
     else:
-        songs = User.sung_songs()
+        songs = Song.objects()
 
     pages = songs.paginate(page=page, per_page=1)
 
