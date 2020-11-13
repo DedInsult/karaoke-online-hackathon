@@ -18,8 +18,19 @@
             <div class="header">
                 {% for song in pages.items %}
                 <a href="{{ url_for('general.speech', song_id=song.id) }}" style="font-size: 25px">{{ song.name
-                    }} </a> <span
-                    class="badge badge-success" style="font-size: 17">Easy</span> <br>
+                    }}
+                    {% if song.difficulty == 1 %}
+                    </a> <span class="badge badge-success" style="font-size: 17">Easy</span> <br>
+                {% endif %}
+                {% if song.difficulty == 2 %}
+                    </a> <span class="badge badge-warning" style="font-size: 17">Medium</span> <br>
+                {% endif %}
+                {% if song.difficulty == 3 %}
+                    </a> <span class="badge badge-danger" style="font-size: 17">Hard</span> <br>
+                {% endif %}
+
+
+
 
                 {% endfor %}
             </div>
