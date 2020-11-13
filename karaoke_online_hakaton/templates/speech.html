@@ -2,16 +2,31 @@
 
 {% block content %}
 
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <div class="bs-component">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <button id='startStop' type="button" class="btn btn-outline-success btn-lg btn-block">Play</button>
+                        <div class="text-center">
+                            <h1 id="scoreTracker"></h1>
+                        </div>
 
+                        <canvas id="visualizer" height="500" width="500"></canvas>
+                    </div>
+                    <div class="card-body">
+                    <span class="btn btn-outline-danger btn-lg btn-block disabled"
+                          style="font-size: 25">{{ song.name }}</span>
+                    <p id="text"></p>
+                    <pre style='line-height: .7; overflow: hidden;' id="original-lyrics">{{ ly|safe }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h1 id="scoreTracker"></h1>
-
-<button id='startStop' type="button" class="btn btn-success">Play</button>
-
-<canvas id="visualizer" height="500" width="500"></canvas>
-<p id="text"></p>
-{{ song.name }}
-<pre style='line-height: .7; overflow: hidden;' id="original-lyrics">{{ ly|safe }}</pre>
 
 <audio id="song" controls src="{{ url_for('static', filename='songs/'+song.path) }}"></audio>
 
@@ -30,8 +45,31 @@
     let wave = new Wave();
     options = {type:"star"};
     wave.fromElement("song","visualizer", options);
-</script>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
 
 
 {% endblock %}

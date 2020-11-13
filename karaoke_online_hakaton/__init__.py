@@ -48,6 +48,7 @@ def create_app(debug=True):
     admin.add_view((AdminView(Achievement, endpoint="Achievements")))
     admin.add_view(SongCustomAdminView(Song, endpoint="Song"))
 
+
     from .application import routes
     app.register_blueprint(routes.general)
 
