@@ -1,12 +1,31 @@
-{% extends 'base.html' %}
+{% extends 'BaseTemplate.html' %}
 
-{% block title %}
-<title>О нас</title>
-{% endblock %}
-
-{% block body %}
+{% block content %}
 <div class="container">
-    <h1>О Нас и о наших достижениях</h1>
-    <p></p>
-</div>
+    <h1 justify="nw">О Нас и о наших достижениях</h1>
+    <div class="card mb-3">
+        <h3 class="card-header">Проект и его функционал</h3>
+          <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Karaoke_about.jpg') }}", alt="Programming", style="width:1065px;height:500px;">
+            <h5 class="card-title">Для чего наш проект?</h5>
+            <h5 class="card-subtitle text-muted">В связи с тем что число заболевших COVID-19 в мире превысило 50 млн человек.Мы решили не лишать удовольствия людей которые любят петь и создали сайт-"Караоке-Онлайн".На нем можно найти свою любимую песню, также можно посоревноваться со своими друзьями,чем лучше спел тем больше заработал балов, добавили магазин в котором будут нахоиться предметы которые вы сможе купить за внутриигровую валюту.
+            </h5>
+          </div>
+        </div>
+    <div class="card mb-3">
+        <h3 class="card-header">На чем мы писали:</h3>
+          <div class="card-body">
+              <img src="{{ url_for('static', filename='img/Python.jpg') }}", alt="Programming", style="width:1065px;height:500px;">
+            <h5 class="card-title">Язык программирования Python</h5>
+            <h5 class="card-subtitle text-muted">Высокоуровневый язык программирования общего назначения, ориентированный на повышение производительности разработчика и читаемости кода. Синтаксис ядра Python минималистичен. В то же время стандартная библиотека включает большой набор полезных функций.</h5>
+          </div>
+        </div>
+    <div class="card mb-3">
+        <h3 class="card-header">Community</h3>
+          <div class="card-body">
+            <h5 class="card-title">О нашей команде</h5>
+            <h6 class="card-subtitle text-muted">Who do this</h6>
+              <h3>"Видео с ютуба"</h3>
+          </div>
+        </div>
 {% endblock %}

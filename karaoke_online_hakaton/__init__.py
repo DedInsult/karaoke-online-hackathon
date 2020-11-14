@@ -15,7 +15,9 @@ admin = Admin()
 from DataBase import  *
 
 user_datastore = MongoEngineUserDatastore(db, User, Role)
+
 security = Security()
+
 
 
 def create_app(debug=True):
@@ -43,6 +45,7 @@ def create_app(debug=True):
     app.config['MONGODB_PORT'] = 27017
     db.init_app(app)
 
+
     # Admin
     admin.init_app(app)
     admin.add_view(AdminView(User, endpoint="user"))
@@ -57,3 +60,4 @@ def create_app(debug=True):
     app.register_blueprint(routes.general)
 
     return app
+
