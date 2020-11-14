@@ -11,15 +11,17 @@
                         <button id='startStop' type="button" class="btn btn-outline-success btn-lg btn-block">Play</button>
                         <div class="text-center">
                             <h1 id="scoreTracker"></h1>
+                            <canvas id="visualizer" height="500" width="500"></canvas>
                         </div>
 
-                        <canvas id="visualizer" height="500" width="500"></canvas>
                     </div>
                     <div class="card-body">
                     <span class="btn btn-outline-danger btn-lg btn-block disabled"
                           style="font-size: 25">{{ song.name }}</span>
                     <p id="text"></p>
-                    <pre style='line-height: .7; overflow: hidden;' id="original-lyrics">{{ ly|safe }}</pre>
+                        <div id="lyrics-container" style="overflow-y: scroll; height: 550px">
+                            <pre style='text-align: center; line-height: .7; overflow: hidden' id="original-lyrics">{{ ly|safe }}</pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -43,7 +45,7 @@
 
     <!-- Visualizer -->
     let wave = new Wave();
-    options = {type:"star"};
+    options = {type:"flower"};
     wave.fromElement("song","visualizer", options);
 
 

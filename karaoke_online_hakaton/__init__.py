@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_mongoengine import MongoEngine
 from flask_security import MongoEngineUserDatastore, Security
