@@ -72,7 +72,7 @@
             {% if current_user.is_authenticated %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false" {% if current_user.is_authenticated and current_user.bought_styles != [] %}style="{{ current_user.bought_styles[0].css_code|safe }}"{% endif %}>
+                   aria-haspopup="true" aria-expanded="false" {% if current_user.is_authenticated and current_user.bought_styles != [] and current_user.bought_styles[0].use == "Username" %}style="{{ current_user.bought_styles[0].css_code|safe }}"{% endif %}>
                     {{ current_user.username }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">

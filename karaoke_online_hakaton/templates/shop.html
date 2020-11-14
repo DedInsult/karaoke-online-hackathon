@@ -23,9 +23,13 @@
                     {{ form.csrf_token }}
                     <input type="submit" value="buy {{ thing.name }}" class="btn-success btn-lg btn-block">
                     {{ form.bthing(value=thing.id) }}
-                <span>used for {{ thing.user }}</span>
+                <span>used for {{ thing.use }}</span>
                 <span class="badge badge-warning" style="font-size: 17">${{ thing.cost }}</span> <br>
                 </form>
+                {% else %}
+                <input type="submit" value="You already bought {{ thing.name }}" class="btn-secondary btn-lg btn-block" disabled>
+                <span>used for {{ thing.use }}</span>
+                <span class="badge badge-warning" style="font-size: 17">${{ thing.cost }}</span> <br>
                 {% endif %}
 
 

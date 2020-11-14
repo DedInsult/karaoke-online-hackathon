@@ -31,11 +31,11 @@ def lobby():
         page = 1
 
     if q:
-        songs = Song.objects(name__contains=q)
+        songs = Song.objects(name_contains=q)
     else:
         songs = Song.objects()
 
-    pages = songs.paginate(page=page, per_page=1)
+    pages = songs.paginate(page=page, per_page=10)
 
     return render_template("lobby.html", songs=songs, pages=pages)
 
@@ -90,9 +90,12 @@ def shop():
     if form.validate_on_submit():
         style_id = form.bthing.data
         user = User.objects(id=current_user.id)[0]
-        style = Shop.objects(id=style_id).get()
-        user.bought_styles.append(style)
-        user.save()
+        style = Shop.objects(id=style_id)[0]
+        if user.points >= style.cost and not style in user.bought_styles :
+            user.points = user.points - style.cost
+            user.bought_styles.append(style)
+            user.save()
+            return redirect(url_for("general.index"))
 
 
 
