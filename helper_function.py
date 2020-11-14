@@ -5,6 +5,7 @@ import random
 def generate_song_name(obj, file_data):
     return str(random.getrandbits(32)) + '.mp3'
 
+
 def spanify_text(song):
     stroki = song.lyrics.split("\n")
 

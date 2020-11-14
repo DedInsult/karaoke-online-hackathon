@@ -1,12 +1,9 @@
 import mongoengine
-from flask import Flask, render_template, Blueprint, url_for, redirect, session, request, send_from_directory, abort, \
-    jsonify
-from flask_mongoengine import ListFieldPagination
-from flask_security import login_required, roles_required
+from flask import Flask, render_template, Blueprint, send_from_directory, abort, jsonify
+from flask_security import login_required
 from DataBase import *
 from forms import *
 from helper_function import spanify_text
-from fuzzywuzzy import fuzz
 
 from karaoke_online_hakaton import avatars
 
@@ -47,26 +44,9 @@ def profile():
 
 @general.route("/profile/SungSongs")
 def SungSongs():
-    # q = request.args.get("q")
-
-    # page = request.args.get('page')
-
-    # if page and page.isdigit():
-    # page = int(page)
-    # else:
-    # page = 1
-
-    # if q:
-    # songs = User.objects(sung_sungs_contains=q)
-    # else:
-    # user = current_user
-
-    # print(user)
-
-    # pages = ListFieldPagination(queryset=user, field_name=User.sung_songs, page=page, per_page=1, doc_id=idk)
-
     user = User.objects(id=current_user.id)[0]
     return render_template('sungsongs.html', songs=user.sung_songs)
+
 
 @general.route("/shop", methods=["GET", "POST"])
 def shop():
@@ -91,17 +71,13 @@ def shop():
         style_id = form.bthing.data
         user = User.objects(id=current_user.id)[0]
         style = Shop.objects(id=style_id)[0]
-        if user.points >= style.cost and not style in user.bought_styles :
+        if user.points >= style.cost and not style in user.bought_styles:
             user.points = user.points - style.cost
             user.bought_styles.append(style)
             user.save()
             return redirect(url_for("general.index"))
 
-
-
     return render_template("shop.html", pages=pages, form=form)
-
-
 
 
 @general.route('/<song_id>')
@@ -142,9 +118,9 @@ def get_avatar(filename):
     print(send_from_directory('karaoke_online_hakaton/static/avatars', filename))
     return send_from_directory('karaoke_online_hakaton/static/avatars', filename)
 
+
 @general.route('/profile/edit', methods=('POST', 'GET'))
 def editprofile():
-
     form = NewUserNameForm()
     if form.validate_on_submit():
         new_name = form.username.data
@@ -162,6 +138,7 @@ def editprofile():
         return redirect(url_for("general.profile"))
 
     return render_template("editprofile.html", form=form, avatar_form=avatar_form)
+
 
 @general.route('/about')
 def about_us():

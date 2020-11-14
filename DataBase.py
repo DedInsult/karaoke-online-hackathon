@@ -3,7 +3,6 @@ from flask import redirect, url_for, request
 from flask_admin import AdminIndexView, form
 from flask_admin.contrib.mongoengine import ModelView
 from flask_security import UserMixin, RoleMixin, current_user
-from mongoengine import connect
 
 from helper_function import generate_song_name
 from karaoke_online_hakaton import db
@@ -46,8 +45,6 @@ class Achievement(db.Document):
         return self.name
 
 
-
-
 class Shop(db.Document):
     name = db.StringField()
     cost = db.IntField()
@@ -71,18 +68,13 @@ class User(db.Document, UserMixin):
     achievements = db.ListField(db.ReferenceField(Achievement), default=[])
 
     bought_styles = db.ListField(db.ReferenceField(Shop), default=[])
-    # username_style =
-    # avatar_style =
 
-    # Basic username assignment
     def save(self, *args, **kwargs):
         if not self.username:
             self.username = self.email.split("@")[0]
         return super(User, self).save(*args, **kwargs)
 
 
-
-# Customizing Admin Views
 class AdminView(ModelView):
     def is_accessible(self):
         return current_user.has_role('admin')
@@ -117,33 +109,3 @@ class SongCustomAdminView(ModelView):
                                           base_path='karaoke_online_hakaton/static/songs',
                                           namegen=generate_song_name)
     }
-
-
-if __name__ == '__main__':
-    connect('test')
-
-    u = User.objects[0]
-    print(u.sung_songs[0].get_author())
-
-    # FOR DEBUG PURPOSES, DELETE LATER
-    # ss = SungSong()
-    # son = Song.objects[0]
-    # ss.song = son
-    # ss.score = 9
-    # u = User.objects[0]
-    # u.sung_songs.append(ss)
-    # u.save()
-
-    # For test, delete later
-    # connect('test')
-    # s = Song()
-    # s.name = 'Батарейка2'
-    # s.duration = 122
-    # s.lyrics = '''
-    #  Оо ия иё Батарейка
-    #  Оо ия иё Батарейка'''
-    # s.difficulty = 3
-    # s.path = '1.mp3'
-    # s.author = 'Жуки'
-    # s.language = 'ru'
-    # s.save()
