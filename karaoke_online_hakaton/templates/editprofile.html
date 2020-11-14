@@ -1,24 +1,35 @@
 {% extends 'BaseTemplate.html' %}
 
 {% block content %}
+
 <div class="container">
     <div class="row justify-content-md-center">
-        <div class="col-3">
-            <div class="card border-info mb-3">
-                <ul class="list-group list-group-flush">
-                    <form method="POST" action="/profile/edit">
-                        {{ form.csrf_token }}
-                        {{ form.username.label }} {{ form.username(class="form-control", placeholder="Username") }}
-                        <input type="submit" value="Save changes" class="btn-success btn-lg btn-block">
-                    </form>
+        <div class="col-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="text-center">
+                            <span class="badge badge-danger" style="font-size: 35"> {{ current_user.username }}</span>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <img src="/static/avatars/{{ current_user.avatar_filename }}" width="250" height="250" style="margin: 10px">
+                    </div>
+                    <div class="card"
+                        <form method="POST" action="/profile/edit">
+                            {{ form.csrf_token }}
+                            {{ form.username(class="form-control", placeholder="Username" ) }}
+                             <small id="emailHelp" class="form-text text-muted">Input here your new username.</small>
+                        </form>
 
                     <form method="post" enctype="multipart/form-data" action="/profile/edit">
-                        {{ avatar_form.csrf_token }}
-                        {{ avatar_form.file }}
-                        {{ avatar_form.submit }}
+                        {{ avatar_form.csrf_token}}
+                        {{ avatar_form.file (class="btn-light btn-sm btn-block")}}
+                         <small id="emailHelp" class="form-text text-muted">Choose your new avatar image.</small>
+                        {{ avatar_form.submit(class="btn-info btn-sm")}}
                     </form>
                     </form>
-                </ul>
+                </div>
             </div>
         </div>
     </div>

@@ -20,16 +20,14 @@
                 <a href="{{ url_for('general.speech', song_id=song.id) }}" style="font-size: 25px">{{ song.name
                     }}
                     {% if song.difficulty == 1 %}
-                    </a> <span class="badge badge-success" style="font-size: 17">Easy</span> <br>
+                </a> <span class="badge badge-success" style="font-size: 17">Easy</span> <br>
                 {% endif %}
                 {% if song.difficulty == 2 %}
-                    </a> <span class="badge badge-warning" style="font-size: 17">Medium</span> <br>
+                </a> <span class="badge badge-warning" style="font-size: 17">Medium</span> <br>
                 {% endif %}
                 {% if song.difficulty == 3 %}
-                    </a> <span class="badge badge-danger" style="font-size: 17">Hard</span> <br>
+                </a> <span class="badge badge-danger" style="font-size: 17">Hard</span> <br>
                 {% endif %}
-
-
 
 
                 {% endfor %}
@@ -37,37 +35,41 @@
         </div>
     </div>
 
-        <ul class="list-group list-group-flush">
-            <nav aria-label="Page navigation">
-                {% if not pages.items %}
-                <h1 style="color:white;" align="center">No Poll like that</h1>
-                <div align="center">
-                    <img src="https://publicdomainvectors.org/photos/feels.png" height="500" width="500">
-                </div>
-                {% endif %}
-                <ul class="pagination">
-                    {% if pages.has_prev %}
-                    <li class="page-item">
+    <ul class="list-group list-group-flush">
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <nav aria-label="Page navigation">
+                    {% if not pages.items %}
+                    <h1 style="color:white;" align="center">No Poll like that</h1>
+                    <div align="center">
+                        <img src="https://publicdomainvectors.org/photos/feels.png" height="500" width="500">
+                    </div>
+                    {% endif %}
+                    <ul class="pagination">
+                        {% if pages.has_prev %}
+                        <li class="page-item">
 
-                        <a class="page-link"
-                           href="?{% if request.args.get('q', '') %}q={{ request.args.get('q', '') }}&{% endif %}page={{ pages.prev_num }}"
-                           aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if pages.has_next %}
-                    <li class="page-item">
-                        <a class="page-link"
-                           href="?{% if request.args.get('q', '') %}q={{ request.args.get('q', '') }}&{% endif %}page={{ pages.next_num }}"
-                           aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </ul>
+                            <a class="page-link"
+                               href="?{% if request.args.get('q', '') %}q={{ request.args.get('q', '') }}&{% endif %}page={{ pages.prev_num }}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if pages.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?{% if request.args.get('q', '') %}q={{ request.args.get('q', '') }}&{% endif %}page={{ pages.next_num }}"
+                               aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </ul>
+        </div>
+    </div>
 </div>
 
 
