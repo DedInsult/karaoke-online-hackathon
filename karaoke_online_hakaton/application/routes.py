@@ -141,6 +141,7 @@ def get_avatar(filename):
 
 @general.route('/profile/edit', methods=('POST', 'GET'))
 def editprofile():
+
     form = NewUserNameForm()
     if form.validate_on_submit():
         new_name = form.username.data
@@ -158,3 +159,7 @@ def editprofile():
         return redirect(url_for("general.profile"))
 
     return render_template("editprofile.html", form=form, avatar_form=avatar_form)
+
+@general.route('/about')
+def about_us():
+    return render_template('about.html')
