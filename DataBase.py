@@ -48,6 +48,16 @@ class Achievement(db.Document):
 
 
 
+class Shop(db.Document):
+    name = db.StringField()
+    cost = db.IntField()
+    use = db.StringField()
+    css_code = db.StringField()
+
+    def __str__(self):
+        return self.name
+
+
 class User(db.Document, UserMixin):
     username = db.StringField(max_length=40)
     email = db.StringField(max_length=255)
@@ -59,6 +69,10 @@ class User(db.Document, UserMixin):
     avatar_filename = db.StringField()
 
     achievements = db.ListField(db.ReferenceField(Achievement), default=[])
+
+    bought_styles = db.ListField(db.ReferenceField(Shop), default=[])
+    # username_style =
+    # avatar_style =
 
     # Basic username assignment
     def save(self, *args, **kwargs):

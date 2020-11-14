@@ -68,6 +68,38 @@ def SungSongs():
     user = User.objects(id=current_user.id)[0]
     return render_template('sungsongs.html', songs=user.sung_songs)
 
+@general.route("/shop", methods=["GET", "POST"])
+def shop():
+    q = request.args.get("q")
+
+    page = request.args.get('page')
+
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    if q:
+        things = Shop.objects(name__contains=q)
+    else:
+        things = Shop.objects()
+
+    pages = things.paginate(page=page, per_page=1)
+
+    form = BuyStyleForm()
+    if form.validate_on_submit():
+        style_id = form.bthing.data
+        user = User.objects(id=current_user.id)[0]
+        style = Shop.objects(id=style_id).get()
+        user.bought_styles.append(style)
+        user.save()
+
+
+
+    return render_template("shop.html", pages=pages, form=form)
+
+
+
 
 @general.route('/<song_id>')
 @login_required

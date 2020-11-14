@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileRequired
-from wtforms import StringField, FileField, SubmitField
+from wtforms import StringField, FileField, SubmitField, HiddenField
 from wtforms.validators import DataRequired
 
 
@@ -13,3 +13,6 @@ class UploadAvatarForm(FlaskForm):
         FileAllowed(['jpg', 'png'], 'The file format should be .jpg or .png.')
     ])
     submit = SubmitField()
+
+class BuyStyleForm(FlaskForm):
+    bthing = HiddenField()
