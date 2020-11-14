@@ -4,6 +4,7 @@ from flask_security import roles_required
 
 app = create_app(debug=True)
 
+
 @app.before_first_request
 def restrict_admin_url():
     endpoint = "admin.index"
@@ -14,7 +15,6 @@ def restrict_admin_url():
     @roles_required('admin')
     def secure_admin_index():
         return admin_index()
-
 
 
 if __name__ == "__main__":
