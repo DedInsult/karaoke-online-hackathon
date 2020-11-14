@@ -65,8 +65,8 @@ def SungSongs():
 
     # pages = ListFieldPagination(queryset=user, field_name=User.sung_songs, page=page, per_page=1, doc_id=idk)
 
-    songs = current_user.sung_songs
-    return render_template('sungsongs.html', songs=songs)
+    user = User.objects(id=current_user.id)[0]
+    return render_template('sungsongs.html', songs=user.sung_songs)
 
 
 @general.route('/<song_id>')

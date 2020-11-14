@@ -17,15 +17,36 @@
         <div class="text-center">
             <div class="header">
                 {% for song in songs %}
-                <a href="{{ url_for('general.speech', song_id=song.id) }}" style="font-size: 25px">{{ song.name
-                    }} </a> <span
-                    class="badge badge-success" style="font-size: 17">Easy</span> <br>
+
+
+                <a href="{{ url_for('general.speech', song_id=song.id) }}" style="font-size: 25px">{{ song.song.name
+                    }} - {{ song.song.author }} </a>                     {% if song.song.difficulty == 1 %}
+                </a> <span class="badge badge-success" style="font-size: 17">Easy</span> <br>
+                {% endif %}
+                {% if song.song.difficulty == 2 %}
+                </a> <span class="badge badge-warning" style="font-size: 17">Medium</span> <br>
+                {% endif %}
+                {% if song.song.difficulty == 3 %}
+                </a> <span class="badge badge-danger" style="font-size: 17">Hard</span> <br>
+                {% endif %}
+                <span class="score">{{ song.score }}%</span><br>
+                <span id='date' style="font-size: 11px; float: right">{{ song.date.strftime('%X %x') }}</span>
+                <hr style="border-top: 1px solid rgb(188 185 185 / 25%); margin-bottom: 0;">
+
+                <script>
+                    function getGreenToRed(percent){
+                        r = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
+                        g = percent>50 ? 255 : Math.floor((percent*2)*255/100);
+                        return 'rgb('+r+','+g+',0)';
+                    }
+
+                    document.querySelectorAll('.score')[document.querySelectorAll('.score').length - 1].style.color = getGreenToRed({{ song.score }})
+                </script>
 
                 {% endfor %}
             </div>
         </div>
     </div>
 </div>
-
 
 {% endblock %}
