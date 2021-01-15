@@ -1,0 +1,76 @@
+{% extends 'BaseTemplate.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card border-secondary mb-3">
+        <div class="jumbotron">
+            <div class="text-center">
+                <h1 class="display-3" style="color:warning;">Get Premium</h1>
+            </div>
+            <div class="text-center">
+                <div class="card border-primary mb-3">
+                    <Img src="{{ url_for('static', filename='img/premium.jpg') }}" style=" object-fit: cover;">
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="bs-component">
+                                <div class="card border-success mb-3" style="max-width: 20rem;">
+                                    <div class="text-center">
+                                        <div class="card-header"><span class="badge badge-success"
+                                                                       style="font-size: 25"> Light </span></div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-success"> Monthly Subscription - 1.99$
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="bs-component">
+                                <div class="card border-info mb-3" style="max-width: 20rem;">
+                                    <div class="text-center">
+                                        <div class="card-header"><span class="badge badge-info"
+                                                                       style="font-size: 25"> Improved </span></div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-info"> Monthly Subscription - 2.99$
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="bs-component">
+                                <div class="card border-warning mb-3" style="max-width: 20rem;">
+                                    <div class="text-center">
+                                        <div class="card-header"><span class="badge badge-warning"
+                                                                       style="font-size: 25"> Master </span></div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-warning"> Monthly Subscription - 4.99$
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

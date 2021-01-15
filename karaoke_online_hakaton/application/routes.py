@@ -143,3 +143,7 @@ def editprofile():
 @general.route('/about')
 def about_us():
     return render_template('about.html')
+
+@general.route('/premium')
+def premium():
+    return render_template('premium.html')
