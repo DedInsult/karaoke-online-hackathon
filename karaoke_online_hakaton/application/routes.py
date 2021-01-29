@@ -4,6 +4,11 @@ from flask_security import login_required
 from DataBase import *
 from forms import *
 from helper_function import spanify_text
+from config import Config
+
+import stripe
+
+stripe.api_key = "sk_test_51ICUYQBfTYBgs6VwHo83UJHU3bHRslQjyB8ghSSK0QNXQ0WSLx5IFBg79s2FGgUBGP16VDTWSGpeJoCoz7BQrS2L00GCcjuzWi"
 
 from karaoke_online_hakaton import avatars
 
@@ -147,3 +152,40 @@ def about_us():
 @general.route('/premium')
 def premium():
     return render_template('premium.html')
+
+
+@general.route('/payment')
+def payment():
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items = [{
+            'price': 'price_1ICUj7BfTYBgs6VwP0yOuR42',
+            'quantity': 1,
+        }],
+        mode='subscription',
+        success_url = url_for('general.thanks', _external = True) + '?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url = url_for('general.payment', _external = True)
+    )
+    return render_template('payment.html')
+
+
+
+@general.route('/stripe_pay')
+def stripe_pay():
+    print('let me die')
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price': 'price_1ICUj7BfTYBgs6VwP0yOuR42',
+            'quantity': 1,
+        }],
+        mode='subscription',
+        success_url=url_for('general.thanks', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url=url_for('general.payment', _external=True),
+    )
+    return {'checkout_session_id': ['id'], 'checkout_public_key': Config.STRIPE_PUBLIC_KEY}
+
+
+@general.route('/thanks')
+def thanks():
+    return render_template('thanks.html')

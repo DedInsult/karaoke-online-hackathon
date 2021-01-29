@@ -27,6 +27,7 @@ def create_app(debug=True):
     app.config.from_object(config.Config)
 
 
+
     # flask avatars
     app.config['AVATARS_SAVE_PATH'] = 'karaoke_online_hakaton/static/avatars'
 
@@ -38,6 +39,7 @@ def create_app(debug=True):
     app.config['SECURITY_PASSWORD_SALT'] = 'salt'
     app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
     security.init_app(app, user_datastore)
+
 
     # DB
     app.config['MONGODB_DB'] = 'karaoke_online'
