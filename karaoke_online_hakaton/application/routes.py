@@ -154,36 +154,23 @@ def premium():
     return render_template('premium.html')
 
 
-@general.route('/payment')
-def payment():
-    session = stripe.checkout.Session.create(
-        payment_method_types=['card'],
-        line_items = [{
-            'price': 'price_1ICUj7BfTYBgs6VwP0yOuR42',
-            'quantity': 1,
-        }],
-        mode='subscription',
-        success_url = url_for('general.thanks', _external = True) + '?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url = url_for('general.payment', _external = True)
-    )
-    return render_template('payment.html')
 
 
 
-@general.route('/stripe_pay')
-def stripe_pay():
-    print('let me die')
+
+@general.route('/stripe_pay/<product_id>')
+def stripe_pay(product_id):
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         line_items=[{
-            'price': 'price_1ICUj7BfTYBgs6VwP0yOuR42',
+            'price': product_id,
             'quantity': 1,
         }],
         mode='subscription',
         success_url=url_for('general.thanks', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url=url_for('general.payment', _external=True),
+        cancel_url=url_for('general.premium', _external=True, product_id=product_id),
     )
-    return {'checkout_session_id': ['id'], 'checkout_public_key': Config.STRIPE_PUBLIC_KEY}
+    return {'checkout_session_id': session['id'], 'checkout_public_key': Config.STRIPE_PUBLIC_KEY}
 
 
 @general.route('/thanks')
