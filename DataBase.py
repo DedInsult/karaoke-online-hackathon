@@ -8,6 +8,7 @@ from helper_function import generate_song_name
 from karaoke_online_hakaton import db
 
 
+
 class Role(db.Document, RoleMixin):
     name = db.StringField(max_length=80, unique=True)
     description = db.StringField(max_length=255)
@@ -68,6 +69,13 @@ class User(db.Document, UserMixin):
     achievements = db.ListField(db.ReferenceField(Achievement), default=[])
 
     bought_styles = db.ListField(db.ReferenceField(Shop), default=[])
+
+    energy = db.IntField(default=10)
+    energy_date = db.DateTimeField(default=datetime(year = 2018, month = 7, day = 12, hour = 7, minute = 9, second = 33))
+    daily_gift_date = db.DateTimeField(default=datetime(year = 2018, month = 7, day = 12, hour = 7, minute = 9, second = 33)
+)
+
+
 
     def save(self, *args, **kwargs):
         if not self.username:

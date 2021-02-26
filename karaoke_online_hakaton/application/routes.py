@@ -5,19 +5,55 @@ from DataBase import *
 from forms import *
 from helper_function import spanify_text
 from config import Config
-
+import datetime
 import stripe
 
 stripe.api_key = "sk_test_51ICUYQBfTYBgs6VwHo83UJHU3bHRslQjyB8ghSSK0QNXQ0WSLx5IFBg79s2FGgUBGP16VDTWSGpeJoCoz7BQrS2L00GCcjuzWi"
+
+default_timer = datetime.datetime(year=2018, month=7, day=12, hour=7, minute=9, second=33)
 
 from karaoke_online_hakaton import avatars
 
 general = Blueprint('general', __name__)
 
 
+def check_energy():
+    user = User.objects(id=current_user.id)[0]
+
+    energy = user.energy
+
+    timedelta = datetime.datetime.now() - user.energy_date
+
+    if energy < 10:
+        if user.energy_date == default_timer:
+            user.energy_date = datetime.datetime.now()
+        elif timedelta.days >= 1 and user.energy_date != default_timer:
+            user.energy = 10
+            user.energy_date = default_timer
+    user.save()
+
+
+def daily_gift():
+    user = User.objects(id=current_user.id)[0]
+
+    if user.daily_gift_date == default_timer:
+        user.daily_gift_date = datetime.datetime.now()
+        user.points += 500
+
+    timedelta = datetime.datetime.now() - user.daily_gift_date
+
+    if timedelta.days >= 1 and user.daily_gift_date != default_timer:
+        user.daily_gift_date = default_timer
+    user.daily_gift_date = default_timer
+
+    user.save()
+
+
 @general.route('/')
 def index():
-    return render_template("mainpage.html")
+    user = User.objects(id=current_user.id)[0]
+    daily_gift()
+    return render_template("mainpage.html", daily_gift_date=user.daily_gift_date, default_timer=default_timer)
 
 
 @general.route('/lobby')
@@ -39,7 +75,13 @@ def lobby():
 
     pages = songs.paginate(page=page, per_page=10)
 
-    return render_template("lobby.html", songs=songs, pages=pages)
+    user = User.objects(id=current_user.id)[0]
+
+    energy = user.energy
+
+    check_energy()
+
+    return render_template("lobby.html", songs=songs, pages=pages, energy=energy)
 
 
 @general.route('/profile', methods=["GET", "POST"])
@@ -93,9 +135,16 @@ def speech(song_id):
 
         text = spanify_text(song)
 
+        user = User.objects(id=current_user.id)[0]
+
+        user.energy -= 1
+        energy = user.energy
+        user.save()
+
         return render_template('speech.html', song=song, ly=text)
 
-    except mongoengine.errors.ValidationError:
+    except mongoengine.errors.ValidationError as e:
+        print(e)
         abort(404)
 
 
@@ -149,13 +198,10 @@ def editprofile():
 def about_us():
     return render_template('about.html')
 
+
 @general.route('/premium')
 def premium():
     return render_template('premium.html')
-
-
-
-
 
 
 @general.route('/stripe_pay/<product_id>')
