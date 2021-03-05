@@ -51,9 +51,7 @@ def daily_gift():
 
 @general.route('/')
 def index():
-    user = User.objects(id=current_user.id)[0]
-    daily_gift()
-    return render_template("mainpage.html", daily_gift_date=user.daily_gift_date, default_timer=default_timer)
+    return render_template("mainpage.html", default_timer=default_timer)
 
 
 @general.route('/lobby')
@@ -222,3 +220,33 @@ def stripe_pay(product_id):
 @general.route('/thanks')
 def thanks():
     return render_template('thanks.html')
+
+@general.route('/leaderboard')
+def leaderboard():
+
+    q = request.args.get("q")
+
+    page = request.args.get('page')
+
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    if q:
+        users = User.objects(username__contains=q).order_by('-points')
+    else:
+        users = User.objects().order_by('-points')
+
+
+    page = request.args.get('page')
+
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+
+    pages = users.paginate(page=page, per_page=10)
+
+    return render_template('LeaderBoard.html', pages=pages, users=users)

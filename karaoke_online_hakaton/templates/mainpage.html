@@ -11,7 +11,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="row justify-content-md-center">
-                        <button type="button" style="width:496" class="btn btn-outline-warning btn-lg btn-block">    Daily Gift    </button>
+                        <button type="button" style="width:496" class="btn btn-outline-warning btn-lg btn-block"> Daily
+                            Gift
+                        </button>
                     </div>
                 </div>
                 <div class="modal-body">
@@ -25,6 +27,9 @@
     </div>
     <script>
         $('#genana').modal('show')
+
+
+
 
 
     </script>
@@ -48,8 +53,12 @@
             <li class="list-group-item">Requires No Installing</li>
         </ul>
         <div class="card-body">
-            <button type="button" class="btn btn-info">Start for Free</button>
-            <button type="button" class="btn btn-warning">Get Premium</button>
+            <a href="{{ url_for('security.register') }}">
+                <button type="button" class="btn btn-info">Start for Free</button>
+            </a>
+            <a href="{{ url_for('general.premium') }}">
+                <button type="button" class="btn btn-warning">Get Premium</button>
+            </a>
         </div>
     </div>
     <div class="card">
