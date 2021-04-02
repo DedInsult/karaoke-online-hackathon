@@ -16,6 +16,14 @@ from karaoke_online_hakaton import avatars
 
 general = Blueprint('general', __name__)
 
+def ranking():
+    ranker = 1
+    users = User.objects().order_by('-points')
+    for user in users:
+        user.rank = ranker
+        ranker += 1
+        user.save()
+
 
 def check_energy():
     user = User.objects(id=current_user.id)[0]
@@ -44,7 +52,6 @@ def daily_gift():
 
     if timedelta.days >= 1 and user.daily_gift_date != default_timer:
         user.daily_gift_date = default_timer
-    user.daily_gift_date = default_timer
 
     user.save()
 
@@ -79,7 +86,10 @@ def lobby():
 
     check_energy()
 
-    return render_template("lobby.html", songs=songs, pages=pages, energy=energy)
+    daily_gift()
+
+    return render_template("lobby.html", songs=songs, pages=pages, energy=energy, daily_gift_date=user.daily_gift_date,
+                           default_timer=default_timer)
 
 
 @general.route('/profile', methods=["GET", "POST"])
@@ -123,6 +133,22 @@ def shop():
             return redirect(url_for("general.index"))
 
     return render_template("shop.html", pages=pages, form=form)
+
+
+@general.route("/mystuff", methods=["GET", "POST"])
+def mystuff():
+    q = request.args.get("q")
+
+
+    if q:
+        things = Shop.objects(name__contains=q, )
+    else:
+        things = Shop.objects()
+
+
+
+
+    return render_template("mystuff.html", things=things)
 
 
 @general.route('/<song_id>')
@@ -236,7 +262,7 @@ def leaderboard():
     if q:
         users = User.objects(username__contains=q).order_by('-points')
     else:
-        users = User.objects().order_by('-points')
+        users = User.objects(points__gt=0).order_by('-points')
 
 
     page = request.args.get('page')
@@ -248,5 +274,7 @@ def leaderboard():
 
 
     pages = users.paginate(page=page, per_page=10)
+
+    ranking()
 
     return render_template('LeaderBoard.html', pages=pages, users=users)

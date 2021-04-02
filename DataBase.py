@@ -56,6 +56,7 @@ class Shop(db.Document):
         return self.name
 
 
+
 class User(db.Document, UserMixin):
     username = db.StringField(max_length=40)
     email = db.StringField(max_length=255)
@@ -65,6 +66,7 @@ class User(db.Document, UserMixin):
     points = db.IntField(default=0)
     sung_songs = db.EmbeddedDocumentListField(SungSong)
     avatar_filename = db.StringField()
+    rank = db.IntField(default=None)
 
     achievements = db.ListField(db.ReferenceField(Achievement), default=[])
 

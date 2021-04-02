@@ -15,14 +15,15 @@
     </div>
 
     <div class="card border-success mb-3">
-
         <div class="text-center">
             <div class="header">
-                {% for user in pages.items %}
-
-                {{ user.username }}<br>
-
-                {% endfor %}
+                <div class="row justify-content-md-center">
+                        {% for user in pages.items %}
+                            {{ user.rank }}
+                            {{ user.username }}
+                            $ {{ user.points }}<br>
+                        {% endfor %}
+                </div>
             </div>
         </div>
     </div>

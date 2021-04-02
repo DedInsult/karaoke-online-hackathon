@@ -3,39 +3,6 @@
 
 {% block content %}
 <div class="container">
-    {% if current_user.is_authenticated %}
-    {% if daily_gift_date == default_timer %}
-
-    <div class="modal" id='genana'>
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="row justify-content-md-center">
-                        <button type="button" style="width:496" class="btn btn-outline-warning btn-lg btn-block"> Daily
-                            Gift
-                        </button>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <p>Your Daily Gift(500$) is ready!</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn btn-outline-success"> Get!</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        $('#genana').modal('show')
-
-
-
-
-
-    </script>
-
-    {% endif %}
-    {% endif %}
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title"></h5>

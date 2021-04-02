@@ -1,0 +1,32 @@
+{% extends "BaseTemplate.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <form class="form-inline my-2 my-lg-0">
+            <div class="card-body">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" name="q"
+                       value="{{ request.args.get('q', '') }}">
+                <button class="btn btn-success" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card border-success mb-3">
+
+        <div class="text-center">
+            <div class="header">
+
+                {% for thing in things %}
+                <input type="submit" value="You already bought {{ thing.name }}" class="btn-secondary btn-lg btn-block" disabled>
+                <span>used for {{ thing.use }}</span>
+                <span class="badge badge-warning" style="font-size: 17">${{ thing.cost }}</span> <br>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
