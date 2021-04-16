@@ -67,6 +67,8 @@ class User(db.Document, UserMixin):
     sung_songs = db.EmbeddedDocumentListField(SungSong)
     avatar_filename = db.StringField()
     rank = db.IntField(default=None)
+    friendlist = db.ListField(db.StringField(), default=[])
+    friendrequests = db.ListField(db.StringField(), default=[])
 
     achievements = db.ListField(db.ReferenceField(Achievement), default=[])
 
@@ -83,6 +85,13 @@ class User(db.Document, UserMixin):
         if not self.username:
             self.username = self.email.split("@")[0]
         return super(User, self).save(*args, **kwargs)
+
+
+#class Friend(db.Document):
+ #   username = db.ReferenceField(User.username)
+  #  status = db.StringField(default = 'Not Friend')
+   # achievments = db.ReferenceField()
+
 
 
 class AdminView(ModelView):

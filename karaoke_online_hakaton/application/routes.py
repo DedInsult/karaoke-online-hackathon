@@ -1,5 +1,5 @@
 import mongoengine
-from flask import Flask, render_template, Blueprint, send_from_directory, abort, jsonify
+from flask import Flask, render_template, Blueprint, send_from_directory, abort, jsonify, request
 from flask_security import login_required
 from DataBase import *
 from forms import *
@@ -278,3 +278,78 @@ def leaderboard():
     ranking()
 
     return render_template('LeaderBoard.html', pages=pages, users=users)
+
+
+@general.route('/friendlist', methods = ("GET", "POST"))
+def friendlist():
+    user = User.objects(id=current_user.id)[0]
+    q = request.args.get("q")
+
+    if request.method == "POST":
+        data = request.form['friend_name']
+        friend = User.objects(username__contains=data).order_by('-points')[0]
+        friend.friendrequests.append(user.username)
+        friend.save()
+
+
+    page = request.args.get('page')
+
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    if q:
+        users = User.objects(username__contains=q).order_by('-points')
+    else:
+        users = User.objects(friendlist__contains=user.username).order_by('-points')
+
+    page = request.args.get('page')
+
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    pages = users.paginate(page=page, per_page=10)
+
+
+
+
+
+    return render_template('friendlist.html', pages=pages, users=users)
+
+
+
+
+@general.route('/friendrequest', methods = ("GET", "POST"))
+def friendrequest():
+    user = User.objects(id=current_user.id)[0]
+    q = request.args.get("q")
+
+    page = request.args.get('page')
+
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    if q:
+        requests = user.friendrequests(__in=q).order_by('-points')
+    else:
+        requests = user.friendrequests
+
+    page = request.args.get('page')
+
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
+
+    pages = requests.paginate(page=page, per_page=10)
+
+
+
+
+
+    return render_template('friendrequests.html', pages=pages, requests=requests)
