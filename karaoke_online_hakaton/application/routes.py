@@ -7,6 +7,7 @@ from helper_function import spanify_text
 from config import Config
 import datetime
 import stripe
+import hashlib
 
 stripe.api_key = "sk_test_51ICUYQBfTYBgs6VwHo83UJHU3bHRslQjyB8ghSSK0QNXQ0WSLx5IFBg79s2FGgUBGP16VDTWSGpeJoCoz7BQrS2L00GCcjuzWi"
 
@@ -284,12 +285,20 @@ def leaderboard():
 def friendlist():
     user = User.objects(id=current_user.id)[0]
     q = request.args.get("q")
+    roomid=''
 
     if request.method == "POST":
         data = request.form['friend_name']
         friend = User.objects(username__contains=data).order_by('-points')[0]
-        friend.friendrequests.append(user.username)
-        friend.save()
+        roomid=hashlib.md5(friend.username.encode()).hexdigest()
+        print(roomid)
+        if user.username not in friend.friendrequests and user.username not in friend.friendlist:
+            friend.friendrequests.append(user.username)
+            user.friendrequests.append(friend.username)
+            user.save()
+            friend.save()
+
+
 
 
     page = request.args.get('page')
@@ -299,8 +308,11 @@ def friendlist():
     else:
         page = 1
 
+    search = False
+
     if q:
         users = User.objects(username__contains=q).order_by('-points')
+        search = True
     else:
         users = User.objects(friendlist__contains=user.username).order_by('-points')
 
@@ -317,7 +329,7 @@ def friendlist():
 
 
 
-    return render_template('friendlist.html', pages=pages, users=users)
+    return render_template('friendlist.html', pages=pages, users=users, search=search, roomid=roomid)
 
 
 
@@ -327,6 +339,20 @@ def friendrequest():
     user = User.objects(id=current_user.id)[0]
     q = request.args.get("q")
 
+    if request.method == "POST":
+        data = request.form['friend_name']
+        friend = User.objects(username__contains=data).order_by('-points')[0]
+        if user.username in friend.friendrequests:
+            friend.friendlist.append(user.username)
+            friend.friendrequests.remove(user.username)
+            friend.save()
+            user.friendlist.append(friend.username)
+            user.friendrequests.remove(friend.username)
+            user.save()
+
+
+    users = User.objects
+
     page = request.args.get('page')
 
     if page and page.isdigit():
@@ -335,9 +361,9 @@ def friendrequest():
         page = 1
 
     if q:
-        requests = user.friendrequests(__in=q).order_by('-points')
+        requests = User.objects(username__contains=q, friendrequests__contains=user.username).order_by('-points')
     else:
-        requests = user.friendrequests
+        requests = User.objects(friendrequests__contains=user.username).order_by('-points')
 
     page = request.args.get('page')
 
@@ -353,3 +379,56 @@ def friendrequest():
 
 
     return render_template('friendrequests.html', pages=pages, requests=requests)
+
+
+@general.route('/chatting/<username>')
+def chatting(username):
+    my_username = User.objects(id=current_user.id)[0].username
+    HASH=hashlib.md5("".join(sorted([my_username, username])).encode()).hexdigest()
+    print(HASH)
+    return render_template('chatting.html', roomID = HASH)
+
+@general.route('/party/<username>/')
+def party(username, song_id="5faac7c065f2720b6e76bd4b"):
+    user = User.objects(id=current_user.id)[0]
+
+
+
+    song = Song.objects(id=song_id)[0]
+
+
+
+    text = spanify_text(song)
+
+    user = User.objects(id=current_user.id)[0]
+
+    user.energy -= 1
+    energy = user.energy
+    user.save()
+
+
+    my_username = User.objects(id=current_user.id)[0].username
+    HASH = hashlib.md5("".join(sorted([my_username, username])).encode()).hexdigest()
+    print(HASH)
+    return render_template('party.html',song=song, ly=text, roomID = HASH)
+
+
+@general.route('/party/<hash>/results', methods=["GET", "POST"])
+def winners(hash):
+    user = User.objects(id=current_user.id)[0]
+    results = {}
+    if request.method == "POST":
+        results[user] = percentage
+
+    if len(results) > 2:
+        results = sorted(results.items(), key=lambda x:x[1])
+
+        winner = list(results)[0]
+        return(winner.html)
+
+
+
+
+
+
+

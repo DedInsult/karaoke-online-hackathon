@@ -73,6 +73,9 @@
                 <a class="nav-link" href="https://vk.com/maxiskilov" target="_blank" >Support <span class="sr-only">(current)</span></a>
             </li>
             {% if current_user.is_authenticated %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('general.friendlist') }}">Friends <span class="sr-only">(current)</span></a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false" {% if current_user.is_authenticated and current_user.bought_styles != [] and current_user.bought_styles[0].use == "Username" %}style="{{ current_user.bought_styles[0].css_code|safe }}"{% endif %}>

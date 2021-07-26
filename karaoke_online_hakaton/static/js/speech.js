@@ -73,6 +73,7 @@ window.addEventListener('load', function () {
     // Send userLyrics to backend
     song.addEventListener('ended', () => {
         console.log('ENDED')
+        if(game == 'solo')
             axios.post('/submit_song', {
                 percentage,
                 song_id
@@ -80,6 +81,10 @@ window.addEventListener('load', function () {
             .then(function (response) {
                 alert(response)
             })
+        else if(game == 'party')
+            {}
+
+
     });
 });
 
